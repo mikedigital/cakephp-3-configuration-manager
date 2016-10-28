@@ -2,53 +2,65 @@
 
 <?php
   # Define some of this stuff first and easily
-  $type = 'text';
+  $type = array_key_exists('type', $settings) ? $settings['type'] : 'text';
   $after = null;
-  $value = $setting['value'];
-  $options = null;
-  $extras = [];
-  // $value =
 
-  if(array_key_exists('type', $setting)) {
-    switch($setting['type']) {
+  if(array_key_exists('type', $settings)) {
+    switch($settings['type']) {
       case 'boolean':
-        $type = 'radio';
-        $options = [
+        $settings['type'] = 'radio';
+        $settings['options'] = [
           0 => 'No',
           1 => 'Yes'
         ];
         break;
       case 'list':
-        $type = 'textarea';
+        $settings['type'] = 'textarea';
         $after = 'Separate each entry with a line break.';
-        $value = implode("\n", $value);
+        $settings['value'] = implode("\n", $settings['value']);
         break;
-      case 'multi':
-        $type = 'multicheckbox';
+      case 'multicheckbox':
         $after = 'Select all that apply.';
-        $options = $setting['options'];
-        $extras['default'] = $value;
+        $settings['default'] = $settings['value'];
         break;
       case 'select':
-        $type = 'select';
-        $options = $setting['options'];
-        $extras['default'] = $value;
+        $settings['default'] = $settings['value'];
+        break;
+      case 'radio':
+        $settings['default'] = $settings['value'];
+        break;
+      case 'date':
+        $type = 'text';
+        $settings['class'] = 'datepicker';
+
+        # Initialize the datepicker
+        $date_format_script = <<<FORMAT
+jQuery(document).ready(function() {
+  $('.datepicker').datepicker({
+FORMAT;
+        # If they added a format, allow that here
+        $date_format_script .= (array_key_exists('format', $settings)) ? 'dateFormat: "'.$settings['format'].'"' : null;
+
+        # Close it out
+        $date_format_script .= <<<FORMAT
+  });
+});
+FORMAT;
+        $this->Html->scriptBlock($date_format_script, ['block' => 'script']);
+        break;
+      case 'datetime':
+        # Cool
+        break;
+      case 'time':
+        $settings['timeFormat'] = (array_key_exists('format', $settings)) ? $settings['format'] : null;
         break;
     }
   } else {
-    echo $this->Html->para(null, 'We have defaulted to a "text" type since you have not declared a "type" for this configuration setting.');
+    echo $this->Html->para('after', 'We have defaulted to a "text" type since you have not declared a "type" for this configuration setting.');
   }
 
   echo $this->Form->create();
-  echo $this->Form->input(
-    'value',
-    [
-      'value' => $value,
-      'type' => $type,
-      'options' => $options,
-      $extras
-    ]
-  );
+  echo $this->Form->input('value', $settings);
 
   if($after) {
     echo $this->Html->para('after', $after);

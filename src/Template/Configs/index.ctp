@@ -36,7 +36,7 @@
         $empty = false;
 
         if(is_null($nice_value) || (is_array($nice_value) && empty($nice_value))) {
-          $nice_value = $this->Html->tag('em', 'Empty');
+          $nice_value = $this->Html->para('italic', 'Empty');
           $empty = true;
         }
 
@@ -69,6 +69,11 @@
 
           # Select
           if($value['type'] == 'select') {
+            $nice_value = $value['options'][$nice_value];
+          }
+
+          # Select
+          if($value['type'] == 'radio') {
             $nice_value = $value['options'][$nice_value];
           }
         }

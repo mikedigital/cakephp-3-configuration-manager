@@ -1,0 +1,19 @@
+@mixin italic {
+  font-style: italic;
+}
+
+@mixin tiny {
+  font-size: 10px;
+}
+
+.config_manager {
+  .italic {
+    @include italic;
+  }
+
+  .after {
+    @include tiny;
+    @include italic;
+    color: #dcdcdc;
+  }
+}

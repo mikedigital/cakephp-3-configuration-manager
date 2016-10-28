@@ -38,23 +38,6 @@ class ConfigsController extends AppController {
   }
 
   /**
-   * View method
-   *
-   * @param string|null $id Config id.
-   * @return \Cake\Network\Response|null
-   * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-   */
-  public function view($id = null)
-  {
-      $config = $this->Configs->get($id, [
-          'contain' => []
-      ]);
-
-      $this->set('config', $config);
-      $this->set('_serialize', ['config']);
-  }
-
-  /**
    * Edit method
    *
    * @param string|null $key Config key.
@@ -77,7 +60,7 @@ class ConfigsController extends AppController {
       return $this->redirect(['action' => 'index']);
     }
 
-    $setting = Configure::read('ConfigManager.'.$key);
+    $settings = Configure::read('ConfigManager.'.$key);
 
     if($this->request->is('post')) {
       # Update the configuration file
@@ -98,9 +81,9 @@ class ConfigsController extends AppController {
       $this->Flash->set('Update successful', ['key' => 'ConfigManager']);
       return $this->redirect(['action' => 'index']);
     } else {
-      $this->request->data = $setting;
+      $this->request->data = $settings;
     }
 
-    $this->set(compact('key', 'setting'));
+    $this->set(compact('key', 'settings'));
   }
 }
