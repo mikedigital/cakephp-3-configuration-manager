@@ -68,15 +68,12 @@ class ConfigsController extends AppController {
       Configure::write('ConfigManager.'.$key.'.value', $value);
       Configure::write('ConfigManager.'.$key.'.modified', time());
       Configure::dump(
-        CONFIG_FILENAME,
+        CONFIG_MANAGER_FILENAME,
         'default',
         [
           'ConfigManager'
         ]
       );
-
-      # Requery the config since this changed it
-      // Configure::load(CONFIG_FILENAME);
 
       $this->Flash->set('Update successful', ['key' => 'ConfigManager']);
       return $this->redirect(['action' => 'index']);

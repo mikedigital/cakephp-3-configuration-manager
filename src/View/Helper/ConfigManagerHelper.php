@@ -9,6 +9,54 @@ class ConfigManagerHelper extends Helper {
 
   public $helpers = ['Html'];
 
+  # Thanks https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#Images_types
+  # Text
+  # Represents any document that contains text and is theoretically human readable
+  public $text_types = [
+    'text/plain',
+    'text/html',
+    'text/css',
+    'text/javascript'
+  ];
+
+  # Image
+  # Represents any kind of images. Videos are not included, though animated images (like animated gif) are describes with an image type.
+  public $image_types = [
+    'image/gif',
+    'image/png',
+    'image/jpeg',
+    'image/bmp',
+    'image/webp'
+  ];
+
+  # Audio
+  # Represents any kind of audio files
+  public $audio_types = [
+    'audio/midi',
+    'audio/mpeg',
+    'audio/webm',
+    'audio/ogg',
+    'audio/wav'
+  ];
+
+  # Video
+  # Represents any kind of video files
+  public $video_types = [
+    'video/webm',
+    'video/ogg'
+  ];
+
+  # Application
+  # Represents any kind of binary data.
+  public $application_types = [
+    'application/octet-stream',
+    'application/pkcs12',
+    'application/vnd.mspowerpoint',
+    'application/xhtml+xml',
+    'application/xml',
+    'application/pdf'
+  ];
+
   public function beforeRender() {
 
     # Define initial scripts
@@ -21,26 +69,8 @@ class ConfigManagerHelper extends Helper {
       'ConfigManager.config_manager'
     ];
 
-    $need_jquery_ui = false;
-    $jquery_ui_types = [
-      'date'
-    ];
-
-    # Iterate through each of the config settings to see if we need more files
-    foreach(Configure::read('ConfigManager') as $setting) {
-      if(array_key_exists('type', $setting) && in_array($setting['type'], $jquery_ui_types) && !$need_jquery_ui) {
-        $need_jquery_ui = true;
-      }
-    }
-
     # We only need this within the ConfigManager plugin
     if($this->request->params['plugin'] == 'ConfigManager') {
-      # Only use these on the edit page
-      if($need_jquery_ui && $this->request->action == 'edit') {
-        $css_files[] = '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css';
-        $js_files[] = '//code.jquery.com/ui/1.12.1/jquery-ui.js';
-      }
-
       # Load the JS files automatically
       $this->Html->script(
         $js_files,
@@ -57,5 +87,40 @@ class ConfigManagerHelper extends Helper {
         )
       );
     }
+  }
+
+  public function file_link($setting = array()) {
+
+    $upload_dir = $this->file_upload_dir($setting);
+
+    if($this->is_image($setting['value']['type'])) {
+      return $this->Html->image($upload_dir.$setting['value']['name'], ['class' => 'thumbnail']);
+    } else {
+      return $this->Html->link('View', $upload_dir.$setting['value']['name']);
+    }
+  }
+
+  public function file_type($file_type = null) {
+    if(in_array($file_type, $this->text_types)) {
+      return 'Text';
+    } elseif(in_array($file_type, $this->image_types)) {
+      return 'Image';
+    } elseif(in_array($file_type, $this->audio_types)) {
+      return 'Audio';
+    } elseif(in_array($file_type, $this->video_types)) {
+      return 'Video';
+    } elseif(in_array($file_type, $this->application_types)) {
+      return 'Application';
+    } else {
+      return 'File';
+    }
+  }
+
+  public function file_upload_dir($setting = array()) {
+    return (array_key_exists('upload_dir', $setting)) ? $setting['upload_dir'] : CONFIG_MANAGER_UPLOAD_DIR;
+  }
+
+  public function is_image($file_type = null) {
+    return ($this->file_type($file_type) == 'Image') ? true : false;
   }
 }

@@ -76,6 +76,17 @@
           if($value['type'] == 'radio') {
             $nice_value = $value['options'][$nice_value];
           }
+
+          # File
+          if($value['type'] == 'file') {
+            $upload_dir = (array_key_exists('upload_dir', $value)) ? $value['upload_dir'] : CONFIG_MANAGER_UPLOAD_DIR;
+            $nice_value  = '<div class="file_data">';
+            $nice_value .= $this->ConfigManager->file_link($value);
+            $nice_value .= $this->Html->tag('span', $value['value']['name'], ['class' => 'file_name']);
+            $nice_value .= $this->Html->tag('span', $this->Number->toReadableSize($value['value']['size']), ['class' => 'file_size']);
+            $nice_value .= $this->Html->tag('span', $this->ConfigManager->file_type($value['value']['type']), ['class' => 'file_type']);
+            $nice_value .= '</div><!-- .file_data -->';
+          }
         }
 
         $cells[] = [

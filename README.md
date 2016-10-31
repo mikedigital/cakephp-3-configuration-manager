@@ -22,7 +22,7 @@ Plugin::load('ConfigManager', [
 Create a configuration file at `config/config_manager.php`
 There is a sample file in `plugins/ConfigManager/config/config_manager_example.php`
 
-If you are using a configuration with the type `date` you will have to include the helper by way of this code in the `src/View/AppView.php` file in the `initialize` method. If you don't add it, it's not terrible. You just won't have jQuery UI's datepicker and some other light styles we used to make things nice. This plugin will only add the files within the plugin itself and any additional files where they are needed (ie: `edit` or `index`)
+If you are using a configuration with the type `date` you will have to include the helper by way of this code in the `src/View/AppView.php` file in the `initialize` method. If you don't add it, it's not terrible. You just won't have some other light styles we used to make things nice. This plugin will only add the files within the plugin itself and any additional files where they are needed (ie: `edit` or `index`)
 
 ```
 $this->loadHelper('ConfigManager.ConfigManager');
@@ -44,22 +44,13 @@ Any time you need a config value, just call it using the default Cake way of `Co
 All settings are configured through the single config file. Everything is in an array key titled `ConfigManager`. The key to each array option is the name of the value. There is a `value` key that is/are the value(s) you want set. The other options you can set are `type` and `options`. I'll describe those below.
 
 ### Types
-If you leave the `type` key out, it will default to a string with a regular input box in the editor.
+For the most part, the `type` matches that of Cake's default Form Helper types. If there are options, add them via the `options` parameter. If you leave the `type` key out, it will default to a string with a regular input box in the editor. The parameters you enter are essentially the settings listed for Cake's FormHelper. There are a couple exceptions, but I'll try to keep up on those.
 
 #### List
-Adding the type `list` allows you to enter multiple values using new lines as the separator. It will save out as an array. For the most part, the `type` matches that of Cake's default Form Helper types.
+Adding the type `list` allows you to enter multiple values using new lines as the separator. It will save out as an array.
 
-#### Multicheckbox
-Adding the type `multicheckbox` will allow you to give the end user the ability to choose out of multiple options. Adding to the `options` array will present the user with the list of available ones. They will save to `values` as an array.
-
-#### Select
-Adding the type `select` will allow you to show the end users a list of options you can pick one from. It's a dropdown. We all know how dropdown boxes work. All options are stored, you guessed it, in the `options` array. It will save as a single value.
-
-#### Radio
-Adding the type `radio` will allow the user to select one out of multiple available options. Options are stored in the `options` array. It will save as a single variable.
-
-#### Date
-This is cool. It will add a datepicker for you to use courtesy of our hard work and jQuery UI's datepicker. The value is whatever you want the date to be but there is an optional `format` parameter you can add to have the date formatted how you'd like it. It follows how the jQuery UI date formatter works which you can read about [here](http://api.jqueryui.com/datepicker/#utility-formatDate).
+#### File
+Adding the type `file` will allow you to upload files. You can specify an optional parameter of `upload_dir` which will upload the file to an alternative directory. Directories should be relative to `WWW_ROOT` and not absolute. The default is `uploads/config/`.
 
 ## Conclusion
 This is not 100% done and probably needs work. If you see something you'd like to make better, make it better. We're all in this together.

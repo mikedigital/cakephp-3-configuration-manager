@@ -16,4 +16,28 @@
     @include italic;
     color: #dcdcdc;
   }
+
+  table {
+    td {
+      p {
+        margin: 0;
+      }
+
+      .file_data {
+        .thumbnail {
+          width: 150px;
+        }
+
+        span {
+          display: block;
+        }
+      }
+    }
+  }
+
+  form {
+    select {
+      padding-right: 20px;
+    }
+  }
 }
