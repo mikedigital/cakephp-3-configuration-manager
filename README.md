@@ -3,7 +3,6 @@ Create and manage your configuration settings with an accompanying form. No data
 
 ## Prerequisites
 * Cake 3
-* jQuery (for running some jQuery UI stuff)
 * Limited patience
 
 ## Installation
